@@ -18,5 +18,5 @@ kable(timestamps_by_state, col.names = c("State", "Number of Timestamps"))
 
 Here is what the result looked like at the end of the vote tallies:
 ``` {r}
-vote_diff_plot
+vote_diff_plot 
 ```
