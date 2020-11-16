@@ -4,6 +4,16 @@
 library(tidyverse)
 raw_data <- read.csv("https://raw.githubusercontent.com/alex/nyt-2020-election-scraper/master/all-state-changes.csv")
 
+#Formatting: split out state name from electoral votes
+#Add Biden and Trump vote columns
+data <- raw_data %>% 
+  separate(state, into = c("state", "electoral_votes"), " \\(") %>% 
+  mutate(electoral_votes = parse_number(electoral_votes)) %>% 
+  mutate(biden_votes = if_else(leading_candidate_name == "Biden",
+                               leading_candidate_votes, 
+                               trailing_candidate_votes)) %>% 
+  mutate(trump_votes = total_votes_count - biden_votes)
+
 #Basic dataframe exploration
 num_cols <- ncol(data)
 num_rows <- nrow(data)
@@ -18,19 +28,12 @@ timestamps_by_state <- data %>%
 
 #Formatting: split out state name from electoral votes
 #Add Biden and Trump vote columns
-data <- raw_data %>% 
-  separate(state, into = c("state", "electoral_votes"), " \\(") %>% 
-  mutate(electoral_votes = parse_number(electoral_votes)) %>% 
-  mutate(biden_votes = if_else(leading_candidate_name == "Biden",
-                               leading_candidate_votes, 
-                               trailing_candidate_votes)) %>% 
-  mutate(trump_votes = total_votes_count - biden_votes)
 
 #When did Biden take the lead in Georgia?
 biden_lead_georgia_time <- data %>% 
   filter(state == "Georgia") %>% 
   filter(leading_candidate_name == "Biden") %>% 
-  filter(timestamp == min(timestamp)) %>% 
+  filter(timestamp == min(timestamp)) 
 
 #What is the earliest time in each state that Biden is ahead?
 biden_lead_all_states_time <- data %>% 
