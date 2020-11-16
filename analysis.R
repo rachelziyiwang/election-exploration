@@ -31,7 +31,6 @@ biden_lead_georgia_time <- data %>%
   filter(state == "Georgia") %>% 
   filter(leading_candidate_name == "Biden") %>% 
   filter(timestamp == min(timestamp)) %>% 
-  pull(timestamp)
 
 #What is the earliest time in each state that Biden is ahead?
 biden_lead_all_states_time <- data %>% 
